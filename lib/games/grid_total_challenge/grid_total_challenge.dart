@@ -73,6 +73,25 @@ class _GameScreenState extends State<GameScreen> {
   void onCellTapped(int row, int col) {
     setState(() {
       selectedCells[row][col] = !selectedCells[row][col];
+      if (isGameCompleted()) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Congratulations!"),
+              content: const Text("You have successfully completed the game."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      }
     });
   }
 
@@ -109,22 +128,20 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Grid Total Challenge",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        backgroundColor: Colors.transparent, // Set the app bar background color
+        centerTitle: true, // Center the title
+      ),
       body: Column(
         children: [
-          // Centered title
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.0),
-            child: Text(
-              "Grid Total Challenge",
-              style: TextStyle(
-                fontSize: 30, 
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 10, 44, 71), 
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 40),
           // The Grid with row targets at the top
           Row(
             children: [
@@ -231,6 +248,51 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
         ],
+      ),
+      // Floating Action Button for "How to Play"
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            builder: (BuildContext context) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      "How to Play",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "1. Each row has a target value displayed on the left.\n"
+                      "2. Each column has a target value displayed at the top.\n"
+                      "3. Tap on grid cells to select or deselect them.\n"
+                      "4. The selected cells' total must match the target for both row and column.\n"
+                      "5. Complete all rows and columns to win the game!",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Tip: Green cells indicate both row and column targets are satisfied.",
+                      style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: Colors.teal,
+        child: const Icon(Icons.info_outline),
       ),
     );
   }

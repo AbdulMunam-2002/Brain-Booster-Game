@@ -16,7 +16,7 @@ class SplashScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-       // color: Colors.blueAccent, // Set your desired background color
+        color: Colors.white, // Optional background color
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -35,6 +35,12 @@ class SplashScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 10, 43, 70), // Text color for contrast
                 ),
+              ),
+              const SizedBox(height: 20),
+              // Add a loading bar
+              const CircularProgressIndicator(
+                color: Color.fromARGB(255, 10, 43, 70), // Customize the loading bar color
+                strokeWidth: 4, // Thickness of the loader
               ),
             ],
           ),
